@@ -7,24 +7,17 @@ app.listen(port, () =>{
     console.log(`app is running at port ${port}`);
 });
 
-/*app.use((req, res) => {
-    console.log("request coming");
-    res.send("<h1>Fruits</h1><ul><li>Apple</li><li>Oranges</li></ul>");
-});*/
-
-app.get("/", (req, res) =>{
-    res.send("This is root path");
+app.get("/", (req, res) => {
+    res.render("home.ejs");
 });
 
-app.get("/about", (req, res) => {
-    res.send("This is about page");
+app.get("/rolldice", (req, res) =>{
+    let num = Math.floor(Math.random()*6)+1;
+    res.render("rollDice.ejs",{diceVal:num})
 });
 
-/*app.get("*", (req, res) => {
-    res.send("This page does not exist");
-// });*/
-
-app.get("/:username/:id", (req, res) =>{
-    let {username, id} = req.params;
-    res.send(`Welcome to the page of ${username}`)
+app.get("/ig/:username", (req, res) =>{
+    const followers = ["saksham","ashish",]
+    let {username} = req.params
+    res.render("instagram.ejs",{username, followers});
 });
