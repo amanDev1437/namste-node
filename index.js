@@ -2,6 +2,8 @@ const express = require("express");
 const path = require("path");
 const {v4: uuidv4}  = require("uuid");
 const methodOverride = require("method-override");
+const mongoose = require("mongoose");
+
 
 const app = express();
 const port = 3000;
@@ -41,41 +43,41 @@ app.use(methodOverride("_method"));
 //     res.send(`Post request, Welcome ${user}`);
 // });
 
-let posts = [
-    {
-        id: uuidv4(),
-        username: "aman-singh",
-        content: "I love Saksham Bhattarai"
-    },
-    {
-        id:uuidv4(),
-        username: "saksham-bhattarai",
-        content: "I love Rohit Sharma and Aman Bhaiya"
-    }
-]
+// let posts = [
+//     {
+//         id: uuidv4(),
+//         username: "aman-singh",
+//         content: "I love Saksham Bhattarai"
+//     },
+//     {
+//         id:uuidv4(),
+//         username: "saksham-bhattarai",
+//         content: "I love Rohit Sharma and Aman Bhaiya"
+//     }
+// ]
 
 
-app.get("/posts", (req, res) =>{
-    res.render("index.ejs", {posts});
-});
+// app.get("/posts", (req, res) =>{
+//     res.render("index.ejs", {posts});
+// });
 
-app.get("/posts/new", (req, res) =>{
-    res.render("new.ejs");
+// app.get("/posts/new", (req, res) =>{
+//     res.render("new.ejs");
 
-});
+// });
 
-app.post("/posts", (req, res) =>{
-    let id = uuidv4();
-    let {username, content} = req.body;
-    posts.push({id, username, content});
-    res.redirect("/posts");
-});
+// app.post("/posts", (req, res) =>{
+//     let id = uuidv4();
+//     let {username, content} = req.body;
+//     posts.push({id, username, content});
+//     res.redirect("/posts");
+// });
 
-app.get("/posts/:id", (req, res) =>{
-    let {id} = req.params;
-    let post = posts.find((p) => id == p.id);
-    res.render("show.ejs",{post});
-});
+// app.get("/posts/:id", (req, res) =>{
+//     let {id} = req.params;
+//     let post = posts.find((p) => id == p.id);
+//     res.render("show.ejs",{post});
+// });
 
 // app.patch("/posts/:id", (req, res) =>{
 //     let {id} = req.params;
@@ -92,6 +94,29 @@ app.get("/posts/:id", (req, res) =>{
 //     let post = posts.find((p) => id==p.id);
 //     res.render("edit.ejs",{post});
 // });
+
+async function main(){
+    await mongoose.connect("mongodb://127.0.0.1:27017/college");
+}
+
+main().then(() =>{
+    console.log("connection successful");
+})
+.catch(err => console.log(err));
+
+const studentSchema = new mongoose.Schema({
+    name : String,
+    email: String,
+    age : Number,
+    dob : Date
+});
+
+const Student = mongoose.model("Student", studentSchema);
+
+const student1 = new Student({name:"Aman",emani:"aman@123",age:23,dob:12-3-2001});
+
+student1.save();
+
 
 app.listen(port, () =>{
     console.log(`app is running at port ${port}`);
